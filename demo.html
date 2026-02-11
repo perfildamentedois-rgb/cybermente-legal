@@ -24,7 +24,7 @@
             padding: 30px;
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.1);
         }
         
@@ -41,13 +41,33 @@
             margin: 0 auto;
         }
         
+        .legend-box {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #fe2c55;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { border-color: #fe2c55; }
+            50% { border-color: #25f4ee; }
+        }
+        
         .step {
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
             padding: 25px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.1);
-            opacity: 0.5;
+            opacity: 0.3;
             transition: all 0.3s;
         }
         
@@ -55,10 +75,11 @@
             opacity: 1;
             border-color: #25f4ee;
             box-shadow: 0 0 20px rgba(37, 244, 238, 0.2);
+            transform: scale(1.02);
         }
         
         .step.completed {
-            opacity: 0.7;
+            opacity: 0.6;
             border-color: #00d26a;
         }
         
@@ -104,25 +125,33 @@
             display: none;
             color: #25f4ee;
             margin-top: 10px;
+            font-size: 1.1em;
         }
         
         .success {
             color: #00d26a;
             margin-top: 10px;
             display: none;
+            font-weight: bold;
         }
         
         .video-preview {
             width: 200px;
             height: 350px;
-            background: #000;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             border-radius: 10px;
             margin: 15px auto;
             display: none;
             align-items: center;
             justify-content: center;
             font-size: 60px;
-            border: 2px solid #25f4ee;
+            border: 3px solid #25f4ee;
+            animation: glow 2s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px #25f4ee; }
+            50% { box-shadow: 0 0 30px #25f4ee; }
         }
         
         .trend-list {
@@ -139,6 +168,12 @@
             background: rgba(255,255,255,0.05);
             border-radius: 5px;
             border-left: 3px solid #fe2c55;
+            animation: slideIn 0.5s;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         .schedule-box {
@@ -163,92 +198,129 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             padding: 15px 25px;
             border-radius: 10px;
-            border: 1px solid #25f4ee;
+            border: 2px solid #00d26a;
             display: none;
+            font-weight: bold;
         }
         
         .tiktok-logo {
             font-size: 40px;
             margin-bottom: 10px;
         }
+        
+        .api-badge {
+            display: inline-block;
+            background: #25f4ee;
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="legend-box" id="legendBox">
+            🎬 CyberMente - Automação para TikTok | Demonstração do fluxo completo
+        </div>
+
         <div class="header">
             <div class="tiktok-logo">🎵</div>
             <h1>CyberMente</h1>
-            <p>Automação Inteligente para TikTok</p>
+            <p>Automação Inteligente para TikTok <span class="api-badge">API OFICIAL</span></p>
         </div>
 
         <!-- PASSO 1: LOGIN -->
         <div class="step active" id="step1">
             <h3><span class="step-number">1</span>Conectar conta do TikTok</h3>
-            <p>Clique abaixo para autorizar o CyberMente a publicar vídeos em sua conta.</p>
-            <button class="btn" onclick="connectTikTok()">Conectar com TikTok</button>
-            <div class="loading" id="loading1">⏳ Conectando...</div>
-            <div class="success" id="success1">✅ Conta @cybermente conectada com sucesso!</div>
+            <p>Autorização OAuth segura com escopos: user.info.basic, video.upload, video.publish</p>
+            <button class="btn" onclick="connectTikTok()" id="btn1">🔗 Conectar com TikTok</button>
+            <div class="loading" id="loading1">⏳ Autenticando via OAuth...</div>
+            <div class="success" id="success1">✅ Conta @cybermente conectada!</div>
         </div>
 
         <!-- PASSO 2: BUSCAR TENDÊNCIAS -->
         <div class="step" id="step2">
             <h3><span class="step-number">2</span>Buscar Tendências Virais</h3>
-            <p>Nossa IA analisa as tendências do momento.</p>
-            <button class="btn" onclick="searchTrends()" disabled id="btn2">Buscar Tendências</button>
-            <div class="loading" id="loading2">🔍 Analisando tendências...</div>
+            <p>IA analisa hashtags populares em tempo real</p>
+            <button class="btn" onclick="searchTrends()" disabled id="btn2">🔍 Buscar Tendências</button>
+            <div class="loading" id="loading2">🤖 Analisando dados do TikTok...</div>
             <div class="trend-list" id="trends">
-                <div class="trend-item">🔥 #TechTok - 2.5M visualizações</div>
-                <div class="trend-item">🚀 #InteligenciaArtificial - 1.8M visualizações</div>
-                <div class="trend-item">💡 #DicasDeTI - 950K visualizações</div>
+                <div class="trend-item">🔥 #TechTok - 2.5M views</div>
+                <div class="trend-item">🚀 #InteligenciaArtificial - 1.8M views</div>
+                <div class="trend-item">💡 #DicasDeTI - 950K views</div>
             </div>
-            <div class="success" id="success2">✅ Tendências encontradas!</div>
+            <div class="success" id="success2">✅ Tendências atualizadas!</div>
         </div>
 
         <!-- PASSO 3: GERAR CONTEÚDO -->
         <div class="step" id="step3">
             <h3><span class="step-number">3</span>Gerar Vídeo com IA</h3>
-            <p>Criamos roteiro, narração e edição automaticamente.</p>
-            <button class="btn" onclick="generateVideo()" disabled id="btn3">Gerar Vídeo</button>
-            <div class="loading" id="loading3">🎬 Gerando vídeo... (60s)</div>
+            <p>Geração automática de roteiro, narração e edição</p>
+            <button class="btn" onclick="generateVideo()" disabled id="btn3">🎬 Gerar Vídeo</button>
+            <div class="loading" id="loading3">⚡ Criando conteúdo... | OpenAI + ElevenLabs + Pexels</div>
             <div class="video-preview" id="videoPreview">▶️</div>
-            <div class="success" id="success3">✅ Vídeo criado: "3 Segredos da IA que você precisa saber!"</div>
+            <div class="success" id="success3">✅ Vídeo criado: "3 Segredos da IA!" (60s)</div>
         </div>
 
         <!-- PASSO 4: AGENDAR -->
         <div class="step" id="step4">
             <h3><span class="step-number">4</span>Agendar Publicação</h3>
-            <p>Escolha o melhor horário para publicar.</p>
-            <button class="btn" onclick="showSchedule()" disabled id="btn4">Configurar Agendamento</button>
+            <p>Agendamento nativo via API do TikTok</p>
+            <button class="btn" onclick="showSchedule()" disabled id="btn4">📅 Configurar Agendamento</button>
             <div class="schedule-box" id="scheduleBox">
-                <p>📅 Data e hora de publicação:</p>
+                <p>Escolha o melhor horário:</p>
                 <input type="datetime-local" id="scheduleTime" value="2026-02-13T20:00">
                 <br><br>
-                <button class="btn" onclick="schedulePost()">Confirmar Agendamento</button>
+                <button class="btn" onclick="schedulePost()">✅ Confirmar Agendamento</button>
             </div>
-            <div class="loading" id="loading4">📤 Agendando via API do TikTok...</div>
-            <div class="success" id="success4">✅ Vídeo agendado para 13/02/2026 às 20:00!</div>
+            <div class="loading" id="loading4">📤 Enviando para TikTok API...</div>
+            <div class="success" id="success4">✅ Agendado: 13/02/2026 às 20:00!</div>
         </div>
 
         <!-- PASSO 5: CONFIRMAÇÃO -->
         <div class="step" id="step5">
-            <h3><span class="step-number">5</span>Pronto!</h3>
-            <p>Seu vídeo será publicado automaticamente no horário agendado.</p>
-            <div class="success" id="success5" style="display: block; font-size: 1.2em;">
-                🎉 Sucesso! O CyberMente publicará seu vídeo automaticamente.<br>
-                <small>Você não precisa manter o computador ligado.</small>
+            <h3><span class="step-number">5</span>Concluído!</h3>
+            <p>Publicação automática confirmada</p>
+            <div class="success" id="success5" style="display: block; font-size: 1.2em; line-height: 1.6;">
+                🎉 SUCESSO!<br>
+                O vídeo será publicado automaticamente no horário agendado.<br>
+                <span style="font-size: 0.9em; opacity: 0.9;">
+                    ✅ Não precisa manter o PC ligado<br>
+                    ✅ Integração via API oficial do TikTok<br>
+                    ✅ Agendamento nativo (Unix timestamp)
+                </span>
             </div>
         </div>
     </div>
 
     <div class="status-bar" id="statusBar">
-        🟢 Conectado: @cybermente | Próximo post: 13/02 20:00
+        🟢 @cybermente | 📅 Próximo post: 13/02 20:00 | ⏰ Timezone: UTC-3
     </div>
 
     <script>
+        const legends = [
+            "🎬 CyberMente - Automação para TikTok | Demonstração do fluxo completo",
+            "👉 PASSO 1: Usuário conecta conta do TikTok via OAuth seguro",
+            "👉 PASSO 2: IA busca tendências virais em tempo real",
+            "👉 PASSO 3: Sistema gera vídeo automaticamente com roteiro e narração",
+            "👉 PASSO 4: Usuário agenda publicação para o melhor horário",
+            "👉 PASSO 5: Vídeo é agendado via API oficial do TikTok",
+            "✅ PRONTO! O vídeo será publicado automaticamente sem intervenção manual"
+        ];
+
+        function updateLegend(index) {
+            document.getElementById('legendBox').textContent = legends[index];
+        }
+
         function connectTikTok() {
+            updateLegend(1);
+            document.getElementById('btn1').disabled = true;
             document.getElementById('loading1').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('loading1').style.display = 'none';
@@ -257,10 +329,12 @@
                 document.getElementById('step1').classList.remove('active');
                 document.getElementById('step2').classList.add('active');
                 document.getElementById('btn2').disabled = false;
-            }, 2000);
+            }, 2500);
         }
 
         function searchTrends() {
+            updateLegend(2);
+            document.getElementById('btn2').disabled = true;
             document.getElementById('loading2').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('loading2').style.display = 'none';
@@ -270,10 +344,12 @@
                 document.getElementById('step2').classList.remove('active');
                 document.getElementById('step3').classList.add('active');
                 document.getElementById('btn3').disabled = false;
-            }, 2500);
+            }, 3000);
         }
 
         function generateVideo() {
+            updateLegend(3);
+            document.getElementById('btn3').disabled = true;
             document.getElementById('loading3').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('loading3').style.display = 'none';
@@ -283,11 +359,13 @@
                 document.getElementById('step3').classList.remove('active');
                 document.getElementById('step4').classList.add('active');
                 document.getElementById('btn4').disabled = false;
-            }, 3000);
+            }, 3500);
         }
 
         function showSchedule() {
+            updateLegend(4);
             document.getElementById('scheduleBox').style.display = 'block';
+            document.getElementById('btn4').disabled = true;
         }
 
         function schedulePost() {
@@ -300,7 +378,9 @@
                 document.getElementById('step4').classList.remove('active');
                 document.getElementById('step5').classList.add('active');
                 document.getElementById('statusBar').style.display = 'block';
-            }, 2000);
+                updateLegend(5);
+                setTimeout(() => updateLegend(6), 2000);
+            }, 2500);
         }
     </script>
 </body>
