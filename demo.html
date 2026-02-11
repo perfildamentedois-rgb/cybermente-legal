@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberMente - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #25f4ee, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        
+        .step.active {
+            opacity: 1;
+            border-color: #25f4ee;
+            box-shadow: 0 0 20px rgba(37, 244, 238, 0.2);
+        }
+        
+        .step.completed {
+            opacity: 0.7;
+            border-color: #00d26a;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #fe2c55;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .step.completed .step-number {
+            background: #00d26a;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #25f4ee, #fe2c55);
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            color: #25f4ee;
+            margin-top: 10px;
+        }
+        
+        .success {
+            color: #00d26a;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .video-preview {
+            width: 200px;
+            height: 350px;
+            background: #000;
+            border-radius: 10px;
+            margin: 15px auto;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            border: 2px solid #25f4ee;
+        }
+        
+        .trend-list {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .trend-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+            border-left: 3px solid #fe2c55;
+        }
+        
+        .schedule-box {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        input[type="datetime-local"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #25f4ee;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px solid #25f4ee;
+            display: none;
+        }
+        
+        .tiktok-logo {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="tiktok-logo">🎵</div>
+            <h1>CyberMente</h1>
+            <p>Automação Inteligente para TikTok</p>
+        </div>
+
+        <!-- PASSO 1: LOGIN -->
+        <div class="step active" id="step1">
+            <h3><span class="step-number">1</span>Conectar conta do TikTok</h3>
+            <p>Clique abaixo para autorizar o CyberMente a publicar vídeos em sua conta.</p>
+            <button class="btn" onclick="connectTikTok()">Conectar com TikTok</button>
+            <div class="loading" id="loading1">⏳ Conectando...</div>
+            <div class="success" id="success1">✅ Conta @cybermente conectada com sucesso!</div>
+        </div>
+
+        <!-- PASSO 2: BUSCAR TENDÊNCIAS -->
+        <div class="step" id="step2">
+            <h3><span class="step-number">2</span>Buscar Tendências Virais</h3>
+            <p>Nossa IA analisa as tendências do momento.</p>
+            <button class="btn" onclick="searchTrends()" disabled id="btn2">Buscar Tendências</button>
+            <div class="loading" id="loading2">🔍 Analisando tendências...</div>
+            <div class="trend-list" id="trends">
+                <div class="trend-item">🔥 #TechTok - 2.5M visualizações</div>
+                <div class="trend-item">🚀 #InteligenciaArtificial - 1.8M visualizações</div>
+                <div class="trend-item">💡 #DicasDeTI - 950K visualizações</div>
+            </div>
+            <div class="success" id="success2">✅ Tendências encontradas!</div>
+        </div>
+
+        <!-- PASSO 3: GERAR CONTEÚDO -->
+        <div class="step" id="step3">
+            <h3><span class="step-number">3</span>Gerar Vídeo com IA</h3>
+            <p>Criamos roteiro, narração e edição automaticamente.</p>
+            <button class="btn" onclick="generateVideo()" disabled id="btn3">Gerar Vídeo</button>
+            <div class="loading" id="loading3">🎬 Gerando vídeo... (60s)</div>
+            <div class="video-preview" id="videoPreview">▶️</div>
+            <div class="success" id="success3">✅ Vídeo criado: "3 Segredos da IA que você precisa saber!"</div>
+        </div>
+
+        <!-- PASSO 4: AGENDAR -->
+        <div class="step" id="step4">
+            <h3><span class="step-number">4</span>Agendar Publicação</h3>
+            <p>Escolha o melhor horário para publicar.</p>
+            <button class="btn" onclick="showSchedule()" disabled id="btn4">Configurar Agendamento</button>
+            <div class="schedule-box" id="scheduleBox">
+                <p>📅 Data e hora de publicação:</p>
+                <input type="datetime-local" id="scheduleTime" value="2026-02-13T20:00">
+                <br><br>
+                <button class="btn" onclick="schedulePost()">Confirmar Agendamento</button>
+            </div>
+            <div class="loading" id="loading4">📤 Agendando via API do TikTok...</div>
+            <div class="success" id="success4">✅ Vídeo agendado para 13/02/2026 às 20:00!</div>
+        </div>
+
+        <!-- PASSO 5: CONFIRMAÇÃO -->
+        <div class="step" id="step5">
+            <h3><span class="step-number">5</span>Pronto!</h3>
+            <p>Seu vídeo será publicado automaticamente no horário agendado.</p>
+            <div class="success" id="success5" style="display: block; font-size: 1.2em;">
+                🎉 Sucesso! O CyberMente publicará seu vídeo automaticamente.<br>
+                <small>Você não precisa manter o computador ligado.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="statusBar">
+        🟢 Conectado: @cybermente | Próximo post: 13/02 20:00
+    </div>
+
+    <script>
+        function connectTikTok() {
+            document.getElementById('loading1').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('loading1').style.display = 'none';
+                document.getElementById('success1').style.display = 'block';
+                document.getElementById('step1').classList.add('completed');
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+                document.getElementById('btn2').disabled = false;
+            }, 2000);
+        }
+
+        function searchTrends() {
+            document.getElementById('loading2').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('loading2').style.display = 'none';
+                document.getElementById('trends').style.display = 'block';
+                document.getElementById('success2').style.display = 'block';
+                document.getElementById('step2').classList.add('completed');
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step3').classList.add('active');
+                document.getElementById('btn3').disabled = false;
+            }, 2500);
+        }
+
+        function generateVideo() {
+            document.getElementById('loading3').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('loading3').style.display = 'none';
+                document.getElementById('videoPreview').style.display = 'flex';
+                document.getElementById('success3').style.display = 'block';
+                document.getElementById('step3').classList.add('completed');
+                document.getElementById('step3').classList.remove('active');
+                document.getElementById('step4').classList.add('active');
+                document.getElementById('btn4').disabled = false;
+            }, 3000);
+        }
+
+        function showSchedule() {
+            document.getElementById('scheduleBox').style.display = 'block';
+        }
+
+        function schedulePost() {
+            document.getElementById('scheduleBox').style.display = 'none';
+            document.getElementById('loading4').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('loading4').style.display = 'none';
+                document.getElementById('success4').style.display = 'block';
+                document.getElementById('step4').classList.add('completed');
+                document.getElementById('step4').classList.remove('active');
+                document.getElementById('step5').classList.add('active');
+                document.getElementById('statusBar').style.display = 'block';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
