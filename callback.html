@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberMente - Autenticação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #25f4ee;
+        }
+        h1 { color: #25f4ee; }
+        .success { color: #00d26a; font-size: 1.2em; margin-top: 20px; }
+        .code {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 CyberMente</h1>
+        <p>Autenticação com TikTok</p>
+        <div id="message">Processando...</div>
+    </div>
+
+    <script>
+        // Pegar código da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        
+        const messageDiv = document.getElementById('message');
+        
+        if (code) {
+            messageDiv.innerHTML = `
+                <div class="success">✅ Autenticação bem-sucedida!</div>
+                <p>Código de autorização:</p>
+                <div class="code">${code}</div>
+                <p>Copie este código e cole no aplicativo CyberMente.</p>
+            `;
+        } else if (error) {
+            messageDiv.innerHTML = `
+                <div style="color: #fe2c55;">❌ Erro: ${error}</div>
+                <p>Tente novamente.</p>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <p>Aguardando autorização...</p>
+            `;
+        }
+    </script>
+</body>
+</html>
